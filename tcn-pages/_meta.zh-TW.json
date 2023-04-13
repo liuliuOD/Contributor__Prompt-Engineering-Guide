@@ -1,0 +1,27 @@
+{
+  "index": "提示工程",
+  "introduction": "簡介",
+  "techniques": "提示的技巧",
+  "applications": "應用",
+  "models": "模型",
+  "risks": "風險和誤用",
+  "papers": "相關論文",
+  "tools": "工具",
+  "notebooks": "範例筆記",
+  "datasets": "資料集",
+  "readings": "延伸閱讀",
+  "about": {
+    "title": "關於我們",
+    "type": "page"
+  },
+  "course":{
+    "title": "相關課程",
+    "type": "page"
+  },
+  "contact": {
+    "title": "聯絡我們 ↗",
+    "type": "page",
+    "href": "https://twitter.com/dair_ai",
+    "newWindow": true
+  }
+}
