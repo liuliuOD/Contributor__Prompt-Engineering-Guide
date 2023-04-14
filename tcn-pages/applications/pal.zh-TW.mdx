@@ -1,19 +1,19 @@
-# PAL (Program-Aided Language Models)
+# 程式輔助語言模型 (PAL - Program-Aided Language Models)
  
 import { Callout, FileTree } from 'nextra-theme-docs'
 import {Screenshot} from 'components/screenshot'
 import PAL from '../../img/pal.png'
 
-[Gao et al., (2022)](https://arxiv.org/abs/2211.10435) presents a method that uses LLMs to read natural language problems and generate programs as the intermediate reasoning steps. Coined, program-aided language models (PAL), it differs from chain-of-thought prompting in that instead of using free-form text to obtain solution it offloads the solution step to a programmatic runtime such as a Python interpreter.
+[Gao 等人 (2022)](https://arxiv.org/abs/2211.10435) 提出了一種方法，使用 LLM 來讀取自然語言問題並生成程式以作為中間的推理步驟，被稱為 PAL。PAL 不同於思維鏈提示，它將產生解答的步驟，轉移到程式運行階段（如：Python 的解釋器），而不從任意格式的文本獲取解答。
 
 <Screenshot src={PAL} alt="PAL" />
-Image Source: [Gao et al., (2022)](https://arxiv.org/abs/2211.10435)
+圖片來源: [Gao 等人 (2022)](https://arxiv.org/abs/2211.10435)
 
-Let's look at an example using LangChain and OpenAI GPT-3. We are interested to develop a simple application that's able to interpret the question being asked and provide an answer by leveraging the Python interpreter. 
+我們來看看使用 `LangChain` 和 `OpenAI GPT-3` 的範例。我們對於開發一個簡單的應用，它能夠解釋提出的問題，並藉由 Python 解釋器提供答案，很感興趣。
 
-Specifically, we are interested to create a functionality that allows the use of the LLM to answer questions that require date understanding. We will provide the LLM a prompt that includes a few exemplars which are adopted from [here](https://github.com/reasoning-machines/pal/blob/main/pal/prompt/date_understanding_prompt.py).  
+具體而言，我們想創建一個功能，讓 LLM 能回答需要理解日期的問題。我們會提供一些經由[這裡產生的範例](https://github.com/reasoning-machines/pal/blob/main/pal/prompt/date_understanding_prompt.py)作為給 LLM 提示。
 
-These are the imports we need:
+這些是我們會需要的引用：
 
 ```python
 import openai
@@ -24,7 +24,7 @@ from langchain.llms import OpenAI
 from dotenv import load_dotenv
 ```
 
-Let's first configure a few things:
+首先配置一些參數：
 
 ```python
 load_dotenv()
@@ -36,13 +36,13 @@ openai.api_key = os.getenv("OPENAI_API_KEY")
 os.environ["OPENAI_API_KEY"] = os.getenv("OPENAI_API_KEY")
 ```
 
-Setup model instance:
+接著設定模型實例：
 
 ```python
 llm = OpenAI(model_name='text-davinci-003', temperature=0)
 ```
 
-Setup prompt + question:
+再來設定提示和問題：
 
 ```python
 question = "Today is 27 February 2023. I was born exactly 25 years ago. What is the date I was born in MM/DD/YYYY?"
@@ -102,4 +102,7 @@ exec(llm_out)
 print(born)
 ```
 
-This will output the following: `02/27/1998`
+這將會輸出以下結果：
+```text
+02/27/1998
+```
