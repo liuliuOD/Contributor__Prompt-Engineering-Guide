@@ -1,0 +1,111 @@
+# 設計提示的小訣竅
+
+這裡是一些你在設計提示時，必須記住的小訣竅：
+
+### 從簡單的開始
+
+當你開始設計提示時，你應該記住這是一個迭代的過程，需要很多實驗才能得到最好的結果。可以從使用簡單的遊樂場開始，像是 `OpenAI` 或 `Cohere`。
+
+你可以從簡單的提示開始，並持續加入更多元素和上下文來得到更好的結果。在過程中對你的提示進行版本控制也非常重要。當我們閱讀本指南時，將會看到許多具備：具體性、簡單性和簡潔性的範例，這通常會帶給你更好的結果。
+
+當你需要處理一個大任務，包含許多子任務在內時，你可以試著將任務拆成更簡單的子任務，並持續這樣做以得到更好的結果。這樣能避免在剛開始設計提示時，添加太多複雜性。
+
+### 指令
+
+你可以透過使用指令，來引導模型做出你想要的結果，像是：「寫入」、「分類」、「總結」、「翻譯」、「排序」等，這些都有助於你設計能有效處理各種簡單任務的提示。
+
+永遠記得你總是需要經過大量實驗才能得到最有效的提示。嘗試各種關鍵字、上下文以及資料來組合出不同的指令，在這之中找出對你的案例和任務最有效的那個。通常對於你要解決的任務，越相關的上下文效果越好。我們在後面的指南中會提到範例和上下文的重要性。
+
+其他人建議將指令放在提示的開頭。並使用特別的區隔符號，像是："###"，來區別指令和上下文。
+
+例如：
+
+*提示：*
+```
+### Instruction ###
+Translate the text below to Spanish:
+
+Text: "hello!"
+```
+
+*輸出結果：*
+```
+¡Hola!
+```
+
+### 特異性
+
+你的模型表現非常依賴於指令和任務。提示的描述性和細節越多，結果越好。這在你需要一個特定的輸出結果或風格時尤其重要。沒有特定的關鍵字能直接產生好結果。但有一個好的格式及詳細描述的提示是更重要的事情。實際上，在提示中提供範例，對於得到特定格式的預期輸出是很有效的做法。
+
+當設計提示時，你應該要記得提示的長度存在限制。至於提示要多具體而詳細也是你需要考慮的事情之一，但是包含過多不必要的細節並不是一個好方法。細節應該相依於你要處理的任務。這是你需要進行很多實驗的其中一部分。我們鼓勵透過大量實驗和迭代，來得到對你的應用而言最好的提示。
+
+我們將嘗試一個使用簡單提示，從文字片段裡擷取特定資訊的範例。
+
+*提示：*
+```
+Extract the name of places in the following text. 
+
+Desired format:
+Place: <comma_separated_list_of_company_names>
+
+Input: "Although these developments are encouraging to researchers, much is still a mystery. “We often have a black box between the brain and the effect we see in the periphery,” says Henrique Veiga-Fernandes, a neuroimmunologist at the Champalimaud Centre for the Unknown in Lisbon. “If we want to use it in the therapeutic context, we actually need to understand the mechanism.""
+```
+
+*輸出結果：*
+```
+Place: Champalimaud Centre for the Unknown, Lisbon
+```
+
+輸入的文字是從[以下文章內容](https://www.nature.com/articles/d41586-023-00509-z)擷取。
+
+### 避免不精準
+
+上面提到的關於詳細說明和改進格式的小訣竅，很容易掉入過於詳細的陷阱。雖然一般來說，具體而明確的提示通常不錯。你可以想像成「有效溝通」，越直接的溝通方式，通常傳達訊息的效果就越好。
+
+例如，你也許對學習提示工程的概念有興趣。可以嘗試像這樣的提示：
+
+```
+Explain the concept prompt engineering. Keep the explanation short, only a few sentences, and don't be too descriptive.
+```
+
+這個提示中並不清楚句子要幾行或應該是什麼風格。但你仍能透過上面的提示得到不錯的回答，而更好的提示會是非常具體、簡潔且直指重點。像是：
+
+```
+Use 2-3 sentences to explain the concept of prompt engineering to a high school student.
+```
+
+### 做還是不做？
+
+這是另一個設計提示時常見的小訣竅，我們應該避免關注不應該做的，以那些應該做的事來替代。鼓勵更具體化並關注那些能得到模型良好回答的細節。
+
+這裡有個關於電影推薦聊天機器人的範例，因為我寫的指令聚焦在不應該做的事情上，所以得到失敗的結果。
+
+*提示：*
+```
+The following is an agent that recommends movies to a customer. DO NOT ASK FOR INTERESTS. DO NOT ASK FOR PERSONAL INFORMATION.
+
+Customer: Please recommend a movie based on my interests.
+Agent: 
+```
+
+*輸出結果：*
+```
+Sure, I can recommend a movie based on your interests. What kind of movie would you like to watch? Do you prefer action, comedy, romance, or something else?
+```
+
+以下是更好的提示：
+
+*提示：*
+```
+The following is an agent that recommends movies to a customer. The agent is responsible to recommend a movie from the top global trending movies. It should refrain from asking users for their preferences and avoid asking for personal information. If the agent doesn't have a movie to recommend, it should respond "Sorry, couldn't find a movie to recommend today.".
+
+Customer: Please recommend a movie based on my interests.
+Agent:
+```
+
+*輸出結果：*
+```
+Sorry, I don't have any information about your interests. However, here's a list of the top global trending movies right now: [list of movies]. I hope you find something you like!
+```
+
+上面提到的範例中，有些來自於 ["OpenAI API 提示工程的最佳實例"](https://help.openai.com/en/articles/6654000-best-practices-for-prompt-engineering-with-openai-api)中的文章。
