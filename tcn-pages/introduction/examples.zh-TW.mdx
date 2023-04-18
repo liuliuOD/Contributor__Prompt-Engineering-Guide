@@ -1,0 +1,294 @@
+# 提示的範例
+
+在之前的單元，我們已經介紹一個對 LLM 提示的基本範例。
+
+在這個單元，我們將提供更多關於如何使用提示，完成不同任務並介紹核心概念的範例。通常藉由範例是學習概念最好的方法。接下來我們將涵蓋一些，關於精心調整的提示如何實現不同類型任務的範例。
+
+主題：
+- [文字摘要 (Text Summarization)](#文字摘要-text-summarization)
+- [資訊擷取 (Information Extraction)](#資訊擷取-information-extraction)
+- [問題回答 (Question Answering)](#問題回答-question-answering)
+- [文字分類 (Text Classification)](#文字分類-text-classification)
+- [對話 (Conversation)](#對話-conversation)
+- [生成程式碼 (Code Generation)](#生成程式碼-code-generation)
+- [推理 (Reasoning)](#推理-reasoning)
+
+---
+
+## 文字摘要 (Text Summarization)
+在自然語言生成領域的其中一個標準任務是文字摘要。文字摘要可以包含各種風格和領域。事實上其中一個在語言模型領域中最有前途的應用，就是將文章和概念匯總為快速且易讀的摘要。我們使用提示來嘗試一個基本的摘要任務。
+
+假如我對學習抗生素相關知識感興趣，我能夠嘗試一個這樣的提示：
+
+*提示：*
+```
+Explain antibiotics
+
+A:
+```
+
+*輸出結果：*
+```
+Antibiotics are a type of medication used to treat bacterial infections. They work by either killing the bacteria or preventing them from reproducing, allowing the body’s immune system to fight off the infection. Antibiotics are usually taken orally in the form of pills, capsules, or liquid solutions, or sometimes administered intravenously. They are not effective against viral infections, and using them inappropriately can lead to antibiotic resistance.
+```
+
+"A:" 是一個用於問答的顯式的提示格式。我在這裡用它告訴模型我的預期輸出。在這個範例中，我們難以知道有沒有使用它，對結果的好壞是否存在影響，不過這將保留到後面的範例中討論。我們先假設這些資訊過多，因此希望縮短摘要。事實上我們可以引導模型將內容總結為一行句子，透過這樣：
+
+*提示：*
+```
+Antibiotics are a type of medication used to treat bacterial infections. They work by either killing the bacteria or preventing them from reproducing, allowing the body’s immune system to fight off the infection. Antibiotics are usually taken orally in the form of pills, capsules, or liquid solutions, or sometimes administered intravenously. They are not effective against viral infections, and using them inappropriately can lead to antibiotic resistance.
+
+Explain the above in one sentence:
+```
+
+*輸出結果：*
+```
+Antibiotics are medications used to treat bacterial infections by either killing the bacteria or stopping them from reproducing, but they are not effective against viruses and overuse can lead to antibiotic resistance.
+```
+
+在這裡我們先不花太多關注力在輸出的準確度上，這在之後的指南中會介紹。在此模型試著將段落內容總結成一句話。你可以對指令進行巧妙的處理，但我們將把這個部分保留到之後的章節。你可以先在這裡暫停並進行實驗，嘗試得到更好的結果。
+
+---
+## 資訊擷取 (Information Extraction)
+
+雖然語言模型被訓練來處理自然語言生成和相關任務，但它對分類和其他自然語言處理`(NLP - natural language processing)`相關的任務也非常擅長。
+
+接下來是一個從給定的段落內容中，擷取資訊的提示範例：
+
+*提示：*
+```
+Author-contribution statements and acknowledgements in research papers should state clearly and specifically whether, and to what extent, the authors used AI technologies such as ChatGPT in the preparation of their manuscript and analysis. They should also indicate which LLMs were used. This will alert editors and reviewers to scrutinize manuscripts more carefully for potential biases, inaccuracies and improper source crediting. Likewise, scientific journals should be transparent about their use of LLMs, for example when selecting submitted manuscripts.
+
+Mention the large language model based product mentioned in the paragraph above:
+```
+
+*輸出結果：*
+```
+The large language model based product mentioned in the paragraph above is ChatGPT.
+```
+
+還有很多方法能幫助我們提升上面輸出的結果，但這已經很有用了。
+
+現在你可以很清楚了解，透過簡單的引導模型該怎麼做，就能讓它處理各種任務。這是一個強大的能力，AI 產品開發者已經用它來構建強大的產品和體驗。
+
+段落來源：[ChatGPT: five priorities for research](https://www.nature.com/articles/d41586-023-00288-7) 
+
+---
+## 問題回答 (Question Answering)
+
+讓模型回答一個特定的答案，其中一個最好的方法，是改良提示的格式。像之前提到的，一個提示可以結合指令、上下文、輸入以及輸出的指標來得到更好的結果。雖然這些元件並非提示的必備元素，但指令越具體，得到的結果通常越好。下面是一個結構化提示的範例：
+
+*提示：*
+```
+Answer the question based on the context below. Keep the answer short and concise. Respond "Unsure about answer" if not sure about the answer.
+
+Context: Teplizumab traces its roots to a New Jersey drug company called Ortho Pharmaceutical. There, scientists generated an early version of the antibody, dubbed OKT3. Originally sourced from mice, the molecule was able to bind to the surface of T cells and limit their cell-killing potential. In 1986, it was approved to help prevent organ rejection after kidney transplants, making it the first therapeutic antibody allowed for human use.
+
+Question: What was OKT3 originally sourced from?
+
+Answer:
+```
+
+*輸出結果：*
+```
+Mice.
+```
+
+內文來自於 [Nature](https://www.nature.com/articles/d41586-023-00400-x)。
+
+---
+
+## 文字分類 (Text Classification)
+
+到目前為止，我們都是使用簡單的指令來完成任務。作為一個提示工程師，你需要在提供更好的指令上精進。但並不只是這樣而已！你將發現在面對更困難的案例時，只提供指令並不足以完成任務。這時你需要開始更多地考慮上下文和其它你能用在提示裡的元素。其它你能提供的元素還包含`輸入資料`和`範例`。
+
+我們將透過一個文字分類的例子來示範這點。
+
+*提示：*
+```
+Classify the text into neutral, negative or positive. 
+
+Text: I think the food was okay. 
+Sentiment:
+```
+
+*輸出結果：*
+```
+Neutral
+```
+
+我們引導模型去分類文字，而它的回傳 `Neutral` 也是正確答案。雖然並沒有任何錯誤，但假如我們真正需要的是讓模型給出特定格式的標籤呢？我們希望模型給的並不是 `Neutral`，而是 `neutral`。其實有很多方法能達到這個目的，在這裡我們關心的是具體性，因此提供更多相關資訊就能得到更好的結果。可以試著提供範例來指定正確的行為。讓我們再試一次：
+
+*提示：*
+```
+Classify the text into neutral, negative or positive. 
+
+Text: I think the vacation is okay.
+Sentiment: neutral 
+
+Text: I think the food was okay. 
+Sentiment:
+```
+
+*輸出結果：*
+```
+neutral
+```
+
+完美！這次模型回傳了我想要的 `neutral` 標籤。看起來在提示中提供範例，對於模型輸出特定的格式很有幫助。
+
+為了突顯為何有時候具體性很重要，來看看以下的範例並找出其中的問題：
+
+*提示：*
+```
+Classify the text into nutral, negative or positive. 
+
+Text: I think the vacation is okay.
+Sentiment:
+```
+
+*輸出結果：*
+```
+Neutral
+```
+
+這裡的問題是什麼？問題在於提示中的 `nutral` 標籤完全被忽略，而模型卻輸出 `Neutral` 來代替它。但假設我們確實想要的就是 `nutral`，你該怎麼修復它？也許可以試著替標籤增加描述，或是為提示加上更多範例？如果你不確定，那我們將在之後的單元討論一些想法。
+
+---
+
+## 對話 (Conversation)
+
+引導 LLM 系統的行為、意圖和特性，也許是你可以透過提示工程來達到的事情中，最有趣的其中一個。這在你構築像是客戶服務聊天機器人的對話系統時特別有用。
+
+例如：我們可以創建一個對話系統，能針對技術和科學問題產生更專業的回答。注意我們如何顯式地告訴它遵從指令。有時候這也被稱為 *角色提示 (role prompting)*。
+
+*提示：*
+```
+The following is a conversation with an AI research assistant. The assistant tone is technical and scientific.
+
+Human: Hello, who are you?
+AI: Greeting! I am an AI research assistant. How can I help you today?
+Human: Can you tell me about the creation of blackholes?
+AI:
+```
+
+*輸出結果：*
+```
+Sure! Black holes are regions of spacetime where the gravitational force is so strong that nothing, not even light, can escape from it. They are created when a very massive star dies and its core collapses in on itself, forming a singularity of infinite density. The intense gravity of the singularity pulls in all the matter and radiation around it, creating the black hole.
+```
+
+我們的 AI 研究助理看起來有點太專業了，是嗎？讓我們改變這個行為，並引導系統給出更平實的答案。
+
+*提示：*
+```
+The following is a conversation with an AI research assistant. The assistant answers should be easy to understand even by primary school students.
+
+Human: Hello, who are you?
+AI: Greeting! I am an AI research assistant. How can I help you today?
+Human: Can you tell me about the creation of black holes?
+AI: 
+```
+
+*輸出結果：*
+```
+Sure! Black holes are created when a very massive star runs out of fuel and collapses in on itself. The gravity of the star is so strong that nothing, not even light, can escape its pull. This creates a point in space-time with an intense gravitational force called a black hole.
+```
+
+我認為已經得到一些進步了。你能繼續改進它。我很確定如果你增加更多範例，你就會得到更好的結果。
+
+---
+
+## 生成程式碼 (Code Generation)
+
+LLM 的一個強勢應用領域就是生成程式碼。`Copilot` 是這方面一個很好的範例。有許多程式碼生成任務能透過巧妙的提示來達成。以下我們來看看一些範例。
+
+首先，我們嘗試生成一個問候使用者的簡單程式碼。
+
+*提示：*
+```
+/*
+Ask the user for their name and say "Hello"
+*/
+```
+
+*輸出結果：*
+```
+let name = prompt("What is your name?");
+console.log(`Hello, ${name}!`);
+```
+
+你可以看到我們甚至不需要指定使用的程式語言。
+
+接下來提升一下難度。我想要讓你看到透過在設計提示時的一點努力，能讓 LLM 變得多強大。
+
+*提示：*
+```
+"""
+Table departments, columns = [DepartmentId, DepartmentName]
+Table students, columns = [DepartmentId, StudentId, StudentName]
+Create a MySQL query for all students in the Computer Science Department
+"""
+```
+
+*輸出結果：*
+```
+SELECT StudentId, StudentName 
+FROM students 
+WHERE DepartmentId IN (SELECT DepartmentId FROM departments WHERE DepartmentName = 'Computer Science');
+```
+
+這非常讓人印象深刻。在例子中，我們提供關於資料表結構的資料，並詢問它產生一個有效的 MySQL 查詢。
+
+---
+
+## 推理 (Reasoning)
+
+也許如今的 LLM 領域中，最困難的其中一項任務就是推理。推理是我最感到興奮的領域之一，因為 LLM 能從中衍生出各種複雜應用。
+
+在數學能力的任務上已經有一些進展。但你需要注意的是，在當前的 LLM 領域中面對推理任務仍存在困難，因此需要更進階的提示工程技巧。我們將會在下個指南中涵蓋到這些進階技巧。而現在我們將討論一些能展現 LLM 數學能力的基本範例。
+
+*提示：*
+```
+What is 9,000 * 9,000?
+```
+
+*輸出結果：*
+```
+81,000,000
+```
+
+我們來嘗試更難的問題。
+
+*提示：*
+```
+The odd numbers in this group add up to an even number: 15, 32, 5, 13, 82, 7, 1. 
+
+A: 
+```
+
+*輸出結果：*
+```
+No, the odd numbers in this group add up to an odd number: 119.
+```
+
+這是錯的！讓我們試著透過改善提示來修正這個錯誤。
+
+*提示：*
+```
+The odd numbers in this group add up to an even number: 15, 32, 5, 13, 82, 7, 1. 
+
+Solve by breaking the problem into steps. First, identify the odd numbers, add them, and indicate whether the result is odd or even. 
+```
+
+*輸出結果：*
+```
+Odd numbers: 15, 5, 13, 7, 1
+Sum: 41 
+41 is an odd number.
+```
+
+比較好了對吧？順帶一提，我試了幾次而系統有時候會出錯。如果你提供結合範例的改良提示，也許有助於更精準的結果。
+
+接下來我們將會繼續介紹更多常見應用中的範例。
+
+在後面的單元，我們將涵蓋更進階的提示工程概念和技巧，有助於提升在各種任務上的表現。
