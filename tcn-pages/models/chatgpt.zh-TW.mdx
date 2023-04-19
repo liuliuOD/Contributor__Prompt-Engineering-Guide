@@ -1,38 +1,38 @@
-# ChatGPT Prompt Engineering
+# ChatGPT 的提示工程
 
 import { Callout, FileTree } from 'nextra-theme-docs'
 import {Screenshot} from 'components/screenshot'
 import CHATGPT1 from '../../img/chatgpt-1.png'
 import CHATGPTCLASSIC from '../../img/chatgpt-classic.png'
 
-In this section, we cover the latest prompt engineering techniques for ChatGPT, including tips, applications, limitations, papers, and additional reading materials.
+在這個單元，我們將談到 ChatGPT 中最新的提示工程技巧，包含：訣竅、應用、限制、論文和額外閱讀素材。
 
 <Callout emoji="⚠️">
-  This section is under heavy development.
+  本單元還在趕工中。
 </Callout>
 
-Topics:
-- [ChatGPT Introduction](#chatgpt-introduction)
-- [Reviewing The Conversation Task](#reviewing-the-conversation-task)
-- [Conversations with ChatGPT](#conversations-with-chatgpt)
+主題：
+- [什麼是 ChatGPT？](#什麼是-chatgpt)
+- [回顧對話任務](#回顧對話任務)
+- [和 ChatGPT 對話](#和-chatgpt)
 
 ---
-## ChatGPT Introduction
+## 什麼是 ChatGPT？
 
-ChatGPT is a new model [trained by OpenAI](https://openai.com/blog/chatgpt) that has the capability to interact in a conversational way. This model is trained to follow instructions in a prompt to provide appropriate responses in the context of a dialogue. ChatGPT can help with answering questions, suggesting recipes, writing lyrics in a certain style, generating code, and much more.
+ChatGPT 是由 [OpenAI](https://openai.com/blog/chatgpt) 訓練的模型，它能透過對話的方式和使用者進行互動。這個模型被訓練來遵循提示中的指令，根據對話中的上下文提供恰當的回答。ChatGPT 可以協助回答問題、推薦食譜、以特定風格寫歌詞、生成程式碼等任務。
 
-ChatGPT is trained using Reinforcement Learning from Human Feedback (RLHF). While this model is a lot more capable than previous GPT iterations (and also trained to reduce harmful and untruthful outputs), it still comes with limitations. Let's cover some of the capabilities and limitations with concrete examples. 
+ChatGPT 是經由`人工回饋式強化學習 (RLHF - Reinforcement Learning from Human Feedback)`訓練而成。這個模型比起之前幾代 GPT 模型來說能力更強（而且也減少了惡意及不實言論的輸出），但還是存在限制。我們將透過幾個範例來說明 ChatGPT 的能力和限制。
 
-You can use the research preview of ChatGPT [here](chat.openai.com) but for the examples below we will use the `Chat` mode on the OpenAI Playground.
+你可以在[這裡](chat.openai.com)使用 ChatGPT 的研究預覽，但在以下的範例中，我們將使用 OpenAI 遊樂場中的 `Chat` 模式。
 
 ---
-## Reviewing The Conversation Task
+## 回顧對話任務
 
-In one of the previous guides, we covered a bit about conversation capabilities and role prompting. We covered how to instruct the LLM to have a conversation in a specific style, with a specific intent, behavior, and identity.
+在先前的指南中，我們曾簡單提到對話能力和`角色提示 (role prompting)`的相關知識。我們討論到如何引導 LLM 在對話中使用特定風格、意圖、行為和身份。
 
-Let's review our previous basic example where we created a conversational system that's able to generate more technical and scientific responses to questions. 
+首先回顧一下先前的基本範例，我們創建了一個能產生更有技術性和科學性回答的對話系統。
 
-*Prompt:*
+*提示：*
 ```
 The following is a conversation with an AI research assistant. The assistant tone is technical and scientific.
 
@@ -42,22 +42,22 @@ Human: Can you tell me about the creation of black holes?
 AI:
 ```
 
-From the example above, you can see two important components:
-- the **intent** or explanation of what the chatbot is
-- the **identity** which instructs the style or tone the chatbot will use to respond
+從上面範例中，你可以看到 2 個重要的組成部分：
+- **意圖**或者說解釋這個聊天機器人是什麼
+- **身份**，引導聊天機器人回答的風格或語氣
 
-The simple example above works well with the text completion APIs that uses `text-davinci-003`. More recently, OpenAI [announced the ChatGPT APIs](https://openai.com/blog/introducing-chatgpt-and-whisper-apis), which is a more powerful and cheaper model called `gpt-3.5-turbo` was specifically built for this type of functionality (chat completions). In fact, OpenAI recommends this as their best model even for non-chat use cases. Other benefits of using the ChatGPT APIs are significant cost reduction (90%) and efficiency.
+上面這個簡單範例，使用 `text-davinci-003` 模型中的文字補全 API，它的效果很不錯。最近 OpenAI 宣布推出的 [ChatGPT API](https://openai.com/blog/introducing-chatgpt-and-whisper-apis)，是一個更強力且更便宜的模型，叫做 `gpt-3.5-turbo`，被專門設計來處理這一類問題（聊天補全）。但事實上，OpenAI 將這個模型稱為它們到目前為止最好的，甚至推薦在非對話類的案例上使用它。其它使用 ChatGPT API 的好處則是明顯降低的成本 (90%) 和效率的提升。
 
-Big companies like Snap Inc. and Instacart are already integrating conversational features powered by ChatGPT on their products that range from personalized recommendations to open-ended shopping goals.
+像 `Snap Inc.` 和 `Instacart` 這些大公司，已經在他們的產品中整合由 ChatGPT 提供的對話功能，功能涵蓋範圍從個人推薦到開放式的購物目標等各個情境。
 
 ---
-## Conversations with ChatGPT
+## 和 ChatGPT 對話
 
-### Multi-turn Conversations
+### 多回合對話
 
-To begin demonstrating the capabilities of ChatGPT, we will use the chatbot assistant example above and discuss the results. Compared to `text-davinci-003`, the `gpt-3.5-turbo` model that powers ChatGPT uses a chat format as input. The model expects a series of messages as input and uses those to generate a response.
+為了展示 ChatGPT 的能力，我們將使用上面的聊天機器人助理作為範例，並討論結果。比起 `text-davinci-003`，`gpt-3.5-turbo` 模型使用聊天格式作為輸入。模型預期一系列的訊息作為輸入，並用這些輸入來生成回答。
 
-*Input:*
+*輸入：*
 ```
 SYSTEM: You are an AI research assistant. You use a tone that is technical and scientific.
 USER: Hello, who are you?
@@ -65,16 +65,16 @@ ASSISTANT: Greeting! I am an AI research assistant. How can I help you today?
 USER: Can you tell me about the creation of black holes?
 ```
 
-*Output:*
+*輸出結果：*
 ```
 ASSISTANT: Of course! Black holes are created when a massive star runs out of fuel and collapses under its own gravity. This collapse causes the star to become incredibly dense, with a gravitational field so strong that not even light can escape it. This point of no return is known as the event horizon. Once a star crosses the event horizon, it is considered a black hole...
 ```
 
-Note that in the example above, I have simplified the input and output but the ChatGPT chat completion API requires messages to be in a specific format. I have added a snapshot below of how this example would look using the `Chat Mode` in the OpenAI Playground:
+注意，在上面的範例中，我簡化了輸入和輸出，但是 ChatGPT 的文字補全 API 需要特定格式的訊息。我在下方加上了一個快照，示範上面的範例如何在 OpenAI 遊樂場的 `Chat 模式`中使用：
 
 <Screenshot src={CHATGPT1} alt="CHATGPT1" />
 
-The more formal API call for our example would look something like the example below:
+將範例轉換成更正式的 API 呼叫，看起來會像是下面這樣：
 
 ```python
 import openai
@@ -89,13 +89,13 @@ openai.ChatCompletion.create(
     ]
 )
 ```
-In fact, the way developers interact with ChatGPT in the future is expected to be done via the [Chat Markup Language](https://github.com/openai/openai-python/blob/main/chatml.md) (ChatML for short).
+事實上，開發者和 ChatGPT 互動的方式，在未來預計將是透過 [Chat Markup Language](https://github.com/openai/openai-python/blob/main/chatml.md) (縮寫為 ChatML)來進行。
 
-### Single-turn tasks
+### 單回合任務
 
-The chat format enables multi-turn conversations but it also supports single-turn tasks similar to what we used with `text-davinci-003`. This means we can use ChatGPT to perform similar tasks as what we have demonstrated for the original GPT models. For example, let's try to perform the following question answering task using ChatGPT:
+聊天格式讓`多回合對話 (multi-turn conversations)`得以實現，同時也支援和之前使用的 `text-davinci-003` 模型相似的`單回合任務 (single-turn tasks)`。這代表我們可以使用 ChatGPT 來執行類似之前提過的 GPT 模型的任務。例如，我們可以試著使用 ChatGPT 模型來實現以下的問答任務：
 
-*Input:*
+*輸入：*
 ```
 USER: Answer the question based on the context below. Keep the answer short and concise. Respond "Unsure about answer" if not sure about the answer.
 
@@ -106,16 +106,16 @@ Question: What was OKT3 originally sourced from?
 Answer:
 ```
 
-*Output:*
+*輸出結果：*
 ```
 ASSISTANT: Mice.
 ```
 
-Keep in mind that I am adding the `USER` and `ASSISTANT` labels to better demonstrate how the task can be performed using ChatGPT. Here is the example using the Playground:
+請注意，我加入了 `USER` 和 `ASSISTANT` 這 2 個標籤，來更好地示範如何以 ChatGPT 模型達成此任務。以下是在遊樂場中使用的範例：
 
 <Screenshot src={CHATGPTCLASSIC} alt="CHATGPTCLASSIC" />
 
-More formally, this is the API call (I've only included the message component of the request):
+更正式的 API 呼叫（我只包含在請求的 `message` 參數中的資訊）如下：
 
 ```python
 CONTENT = """Answer the question based on the context below. Keep the answer short and concise. Respond \"Unsure about answer\" if not sure about the answer.
@@ -136,14 +136,14 @@ response = openai.ChatCompletion.create(
 )
 ```
 
-### Instructing Chat Models
+### 聊天模型的指令
 
-According to the official OpenAI docs, snapshots of the `gpt-3.5-turbo` model will also be made available. For example, we can access the snapshot from March 1 `gpt-3.5-turbo-0301`. This allows developers to opt for specific model versions. This also means that the best practices for instructing models may change from version to version. 
+根據 OpenAI 的官方文件所說，`gpt-3.5-turbo` 模型的快照將會被公開。例如，我們可以連接 3 月 1 日的快照 `gpt-3.5-turbo-0301`。這讓開發者能選擇特定的模型版本。也代表著最佳實作的模型指令也許會隨著版本改變。
 
-The current recommendation for `gpt-3.5-turbo-0301` is to add instructions in the `user` message as opposed to the available `system` message. 
+對於 `gpt-3.5-turbo-0301` 模型，目前的建議是將指令加到 `user` 的訊息中，而不是 `system` 中。
 
 ---
-## References
+## 參考
 
 - [ChatGPT-4 Outperforms Experts and Crowd Workers in Annotating Political Twitter Messages with Zero-Shot Learning](https://arxiv.org/abs/2304.06588) (April 2023)
 - [ChatGPT Beyond English: Towards a Comprehensive Evaluation of Large Language Models in Multilingual Learning](https://arxiv.org/abs/2304.05613) (April 2023)
