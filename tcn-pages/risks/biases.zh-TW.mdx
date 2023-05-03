@@ -1,0 +1,99 @@
+# 偏誤
+
+LLM 可能產生有問題的生成結果，這將造成模型效能在下游任務上出現偏誤。這些問題中的一部分可以被有效的提示策略緩解，但還是需要更多進階技巧，如：內容審核和過濾。
+
+### 範例的分佈
+
+當使用少量樣本 (few-shot) 學習時，範例的分佈會影響模型表現或是在某方面帶來偏誤嗎？我們可以進行一個簡單的測試。
+
+*提示：*
+```
+Q: I just got the best news ever!
+A: Positive
+
+Q: We just got a raise at work!
+A: Positive
+
+Q: I'm so proud of what I accomplished today.
+A: Positive
+
+Q: I'm having the best day ever!
+A: Positive
+
+Q: I'm really looking forward to the weekend.
+A: Positive
+
+Q: I just got the best present ever!
+A: Positive
+
+Q: I'm so happy right now.
+A: Positive
+
+Q: I'm so blessed to have such an amazing family.
+A: Positive
+
+Q: The weather outside is so gloomy.
+A: Negative
+
+Q: I just got some terrible news.
+A: Negative
+
+Q: That left a sour taste.
+A:
+```
+
+*輸出結果：*
+```
+Negative
+```
+
+在上面的例子中，看起來範例的分佈並沒有讓模型產生偏誤。讓我們嘗試另一個更難分類的例子，來看看模型做得如何：
+
+*提示：*
+```
+Q: The food here is delicious!
+A: Positive 
+
+Q: I'm so tired of this coursework.
+A: Negative
+
+Q: I can't believe I failed the exam.
+A: Negative
+
+Q: I had a great day today!
+A: Positive 
+
+Q: I hate this job.
+A: Negative
+
+Q: The service here is terrible.
+A: Negative
+
+Q: I'm so frustrated with my life.
+A: Negative
+
+Q: I never get a break.
+A: Negative
+
+Q: This meal tastes awful.
+A: Negative
+
+Q: I can't stand my boss.
+A: Negative
+
+Q: I feel something.
+A:
+```
+
+*輸出結果：*
+```
+Negative
+```
+
+雖然最後的一句話有些主觀，但我改變了範例的分佈，改用 8 個正面範例加上 2 個負面範例，然後試著再次使用相同的句子。猜猜看模型回應了什麼？它回應了 "Positive"。這個模型也許有很多情感分類的知識，因此很難令它在這個問題上產生偏誤。在這裡得出的結論是，避免失衡的範例分佈，對每個標籤提供更平均的範例數量。對於模型沒有足夠知識的困難任務，它可能更容易混淆。
+
+### 範例的順序
+
+當使用少量樣本學習時，範例的順序會影響模型的表現，或是在某些時候帶來偏誤嗎？
+
+你可以嘗試上面的範例，並試試看你能否藉由改變順序，讓模型出現偏誤。我們的建議是讓範例順序隨機排列。例如，避免將所有正面的範例都排在前面，而負面的範例都排在最後。當標籤的分佈不均時，這個問題的影響將會進一步被放大。總是確保進行大量實驗，以減少這類型的偏誤。
