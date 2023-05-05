@@ -1,0 +1,14 @@
+{
+    "zeroshot": "零樣本提示 (Zero-shot Prompting)",
+    "fewshot": "少量樣本提示 (Few-shot Prompting)",
+    "cot": "思維鏈提示 (Chain-of-Thought Prompting)",
+    "consistency": "自一致性 (Self-Consistency)",
+    "knowledge": "生成知識提示",
+    "ape": "自動生成提示工程",
+    "activeprompt": "主動提示",
+    "dsp": "定向鼓勵提示",
+    "react": "逆向工程，對可控制的文字生成相關之注意力機制",
+    "multimodalcot": "多模式思維鏈",
+    "graph": "圖像提示"
+}
+  
