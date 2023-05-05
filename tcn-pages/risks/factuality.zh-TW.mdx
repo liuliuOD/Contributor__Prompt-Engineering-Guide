@@ -1,0 +1,34 @@
+# 真實性
+
+LLM 能夠生成看似連貫且令人信以為真的回應，但有時候其實是捏造而成。改進提示有助於提升模型產生更準確、更真實的回應，也能降低生成不一致和捏造回應的可能性。
+
+一些解法可能包含：
+- 將事實（如：相關文章的段落內容或是維基百科的條目）作為上下文的一部分，來降低模型生成捏造文字的可能性。
+- 指定模型生成較為實際的回應，透過降低機率參數和引導模型在不知道答案時承認（如：我不知道）。
+- 在提示中提供模型一些問題範例和對應回覆的組合。
+
+我們看看一個簡單的範例：
+
+*提示：*
+```
+Q: What is an atom? 
+A: An atom is a tiny particle that makes up everything. 
+
+Q: Who is Alvan Muntz? 
+A: ? 
+
+Q: What is Kozar-09? 
+A: ? 
+
+Q: How many moons does Mars have? 
+A: Two, Phobos and Deimos. 
+
+Q: Who is Neto Beto Roberto? 
+```
+
+*輸出結果：*
+```
+A: ?
+```
+
+我捏造了 "Neto Beto Roberto" 這個名稱，所以這次模型是正確的。試著稍微改變問題，再以你之前已經學過的所有知識，看看能否用於調整模型，讓其正確運作。
